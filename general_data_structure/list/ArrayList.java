@@ -3,6 +3,7 @@ package general_data_structure.list;
 import static java.lang.reflect.Array.newInstance;
 import java.util.Arrays;
 
+@SuppressWarnings("unchecked")
 public class ArrayList<T> {
     private T[] values;
     private int size;
@@ -102,7 +103,7 @@ public class ArrayList<T> {
         return rev;
     }
 
-    public int indexOf(T o) {
+    public int indexOf(Object o) {
         int res = -1;
         for (int i = 0; i < size; i++) {
             if (o.equals(values[i])) {
@@ -123,4 +124,5 @@ public class ArrayList<T> {
         }
         return rev;
     }
+
 }
