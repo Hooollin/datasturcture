@@ -31,9 +31,9 @@ public class BST<T extends Comparable<T>> {
         }
 
         if (e.compareTo(node.value) < 0)
-            node.left = _add(node.left, e);
+            node.left = add(node.left, e);
         else if (e.compareTo(node.value) > 0)
-            node.right = _add(node.right, e);
+            node.right = add(node.right, e);
 
         return node;
     }
