@@ -1,14 +1,15 @@
 package general_data_structure.tree;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.LinkedList;
 import java.util.NoSuchElementException;
-import java.util.Stack;
 
-public class BST<T extends Comparable<T>> {
+import com.sun.corba.se.impl.orbutil.graph.Node;
+
+public class BinarySearchTree<T extends Comparable<T>> {
     private static class Node<T> {
         private T value;
-        private Node<T> left, right;
+        private Node<T> left;
+        private Node<T> right;
 
         public Node(T value) {
             this.value = value;
@@ -22,7 +23,7 @@ public class BST<T extends Comparable<T>> {
         return size == 0;
     }
 
-    public int size() {
+    public boolean size() {
         return size;
     }
 
@@ -32,15 +33,14 @@ public class BST<T extends Comparable<T>> {
 
     private Node<T> add(Node<T> node, T e) {
         if (node == null) {
-            size++;
+            size += 1;
             return new Node<>(e);
         }
-
-        if (e.compareTo(node.value) < 0)
-            node.left = add(node.left, e);
-        else if (e.compareTo(node.value) > 0)
+        if (e.compareTo(node.value) < 0) {
+            root.left = add(node.left, e);
+        } else if (e.compareTo(node.value) > 0) {
             node.right = add(node.right, e);
-
+        }
         return node;
     }
 
@@ -52,17 +52,14 @@ public class BST<T extends Comparable<T>> {
         if (node == null) {
             return false;
         }
-        if (e.compareTo(node.value) < 0) {
-            return contains(node.left, e);
-        } else if (e.compareTo(node.value) > 0) {
+        if (e.compareTo(node.value) > 0) {
             return contains(node.right, e);
+        } else if (e.compareTo(node.value) < 0) {
+            return contains(node.left, e);
         }
         return true;
     }
 
-    /**
-     * 前序遍历
-     */
     public void preorder() {
         preorder(root);
     }
@@ -76,39 +73,19 @@ public class BST<T extends Comparable<T>> {
         preorder(node.right);
     }
 
-    /**
-     * 前序遍历的非递归实现
-     */
-    public void preorderNoRecurse() {
-        if (root == null)
-            return;
-        Stack<Node<T>> stack = new Stack<>();
-        stack.add(root);
-        while (!stack.isEmpty()) {
-            Node<T> n = stack.pop();
-            System.out.println(n.value);
-            if (n.right != null)
-                stack.push(n.right);
-            if (n.left != null)
-                stack.push(n.left);
-        }
-    }
-
-    // 中序遍历
     public void inorder() {
         inorder(root);
     }
 
-    private void inorder(Node<T> node) {
-        if (node == null) {
+    private void inorder(Node<T> root) {
+        if (root == null) {
             return;
         }
-        inorder(node.left);
-        System.out.println(node.value);
-        inorder(node.right);
+        inorder(root.left);
+        System.out.println(root.value);
+        inorder(root.right);
     }
 
-    // 后序遍历
     public void postorder() {
         postorder(root);
     }
@@ -122,20 +99,24 @@ public class BST<T extends Comparable<T>> {
         System.out.println(node.value);
     }
 
-    // 广度优先遍历
     public void levelorder() {
-        if (root == null)
+        if (root == null) {
             return;
-        Deque<Node<T>> queue = new ArrayDeque<>();
-        queue.addLast(root);
-        while (!queue.isEmpty()) {
-            Node<T> node = queue.removeFirst();
-            System.out.println(node.value);
-            if (node.left != null) {
-                queue.addLast(node.left);
-            }
-            if (node.right != null) {
-                queue.addLast(node.right);
+        }
+        LinkedList<Node<T>> q = new LinkedList<>();
+        Node<T> curr = root;
+        q.offer(curr);
+        while (!q.isEmpty()) {
+            int size = q.size();
+            while (size-- > 0) {
+                Node<T> top = q.poll();
+                System.out.println(top.value);
+                if (top.left != null) {
+                    q.offer(top.left);
+                }
+                if (top.right != null) {
+                    q.offer(top.right);
+                }
             }
         }
     }
@@ -147,11 +128,11 @@ public class BST<T extends Comparable<T>> {
         return getMax(root).value;
     }
 
-    private Node<T> getMax(Node<T> node) {
-        if (node.right == null) {
-            return node;
+    private Node<T> getMax(Node<T> root) {
+        if (root.right == null) {
+            return root;
         }
-        return getMax(node.right);
+        return getMax(root.right);
     }
 
     public T getMin() {
@@ -170,27 +151,23 @@ public class BST<T extends Comparable<T>> {
 
     public T removeMin() {
         T delete = getMin();
-        // 因为可能只有一个节点，所以需要root接收removeMin的返回值null
         root = removeMin(root);
         return delete;
     }
 
-    private Node<T> removeMin(Node<T> node) {
+    public Node<T> removeMin(Node<T> node) {
         if (node.left == null) {
             Node<T> rightNode = node.right;
             node.right = null;
             size--;
             return rightNode;
         }
-        // 把要删除节点的右节点赋值给 父节点的左节点
         node.left = removeMin(node.left);
         return node;
-
     }
 
     public T removeMax() {
         T delete = getMax();
-        // 因为可能只有一个节点，所以需要root接收removeMin的返回值null
         root = removeMax(root);
         return delete;
     }
@@ -198,42 +175,28 @@ public class BST<T extends Comparable<T>> {
     public Node<T> removeMax(Node<T> node) {
         if (node.right == null) {
             Node<T> leftNode = node.left;
-            size--;
             node.left = null;
+            size--;
             return leftNode;
         }
-        node.right = removeMax(node.right);
+        node.left = removeMax(node.left);
         return node;
     }
 
-    /**
-     * 删除任意节点
-     *
-     * @param e
-     */
     public void remove(T e) {
         root = remove(root, e);
     }
 
-    private Node<T> remove(Node<T> node, T element) {
-        if (node == null) {
-            return null;
-        }
-
-        // 如果要删除的节点小于当前节点，继续查询其左子树
-        if (element.compareTo(node.value) < 0) {
-            node.left = remove(node.left, element);
+    private Node<T> remove(Node<T> node, T e) {
+        if (e.compareTo(node.value) > 0) {
+            node.left = remove(node.right, e);
             return node;
         }
-        // 如果要删除的节点大于当前节点，继续查询其右子树
-        if (element.compareTo(node.value) > 0) {
-            node.right = remove(node.right, element);
+        if (e.compareTo(node.value) < 0) {
+            node.right = remove(node.left, e);
             return node;
         }
 
-        // =======要删除的节点就是当前的节点
-
-        // 如果要删除节点的左子树为空
         if (node.left == null) {
             Node<T> rightNode = node.right;
             node.right = null;
@@ -241,7 +204,6 @@ public class BST<T extends Comparable<T>> {
             return rightNode;
         }
 
-        // 如果要删除节点的右子树为空
         if (node.right == null) {
             Node<T> leftNode = node.left;
             node.left = null;
@@ -249,9 +211,6 @@ public class BST<T extends Comparable<T>> {
             return leftNode;
         }
 
-        // =======如果要删除的节点左右子树都不为空
-
-        // 找到要删除节点的后继，也就是右子树的最小值
         Node<T> successor = getMin(node.right);
         successor.right = removeMin(node.right);
         successor.left = node.left;
