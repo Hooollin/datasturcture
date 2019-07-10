@@ -117,6 +117,32 @@ Status substring(String *sub, String s, int pos, int len)
     }
     return OK;
 }
+
+// t在主串s第pos后相同的子串
+int index(String s, String t, int pos)
+{
+    int sLen = s[0];
+    int tLen = t[0];
+    int res = -1;
+    for (int i = pos + 1; i <= sLen; i++)
+    {
+        if (sLen - i + 1 < tLen)
+        {
+            break;
+        }
+        int j = 0;
+        while (j < tLen && s[j + i] == t[j + 1])
+        {
+            j++;
+        }
+        if (j == tLen)
+        {
+            res = i - 1;
+            break;
+        }
+    }
+    return res;
+}
 //打印字符串
 void printStr(String s)
 {
@@ -128,12 +154,68 @@ void printStr(String s)
     printf("\n");
 }
 
+//用v替换所有在s中出现过的字串t
+//代码太难看了。。。
+Status replace(String *s, String t, String v)
+{
+    int sLen = **s;
+    int tLen = t[0];
+    int vLen = v[0];
+    int i = 1;
+    while (i < sLen)
+    {
+        int tIndex = index(*s, t, i - 1);
+        if (tIndex == -1)
+        {
+            **s = sLen;
+            return OK;
+        }
+        i = tIndex + 1;
+        if (tLen < vLen)
+        {
+            int move = vLen - tLen;
+            sLen += move;
+            if (sLen + 1 + move > MAXSTRLEN)
+            {
+                printf("overflow");
+                return ERR;
+            }
+            while (move-- > 0)
+            {
+                for (int k = sLen + 1; k >= i + tLen; k--)
+                {
+                    *(*s + k) = *(*s + k - 1);
+                }
+            }
+        }
+        else if (tLen > vLen)
+        {
+            int move = tLen - vLen;
+            sLen -= move;
+            for (int k = i + vLen; k < 1 + sLen - vLen; k++)
+            {
+                *(*s + k) = *(*s + k + move);
+            }
+        }
+        int j = 0;
+        while (j < vLen)
+        {
+            *(*s + i + j) = v[j + 1];
+            j += 1;
+        }
+        i += j;
+    }
+    **s = sLen;
+    return OK;
+}
+
 void main()
 {
-    String s, t;
-    char testStr[20] = "hello";
+    String s, t, q;
+    char testStr[20] = "hellllo";
     strAssign(&s, testStr);
-    strAssign(&t, "helloabc");
-    substring(&t, s, 2, 4);
-    printStr(t);
+    strAssign(&t, "ll");
+    strAssign(&q, "kkk");
+    replace(&s, t, q);
+    printStr(s);
 }
