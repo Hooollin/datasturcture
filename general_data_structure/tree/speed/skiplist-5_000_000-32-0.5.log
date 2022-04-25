@@ -1,0 +1,39 @@
+test inserting...
+	Level expands from 0 to 1
+	Level expands from 1 to 2
+	Level expands from 2 to 3
+	Level expands from 3 to 4
+	Level expands from 4 to 5
+	Level expands from 5 to 7
+	Level expands from 7 to 8
+	Level expands from 8 to 9
+	Level expands from 9 to 14
+	Level expands from 14 to 16
+	Level expands from 16 to 19
+	Level expands from 19 to 20
+	Level expands from 20 to 22
+	Level expands from 22 to 23
+	Level expands from 23 to 24
+	inserting 5000000 elements using 2.203s.
+
+test searching...
+	searching 5000000 elements using 1.375s.
+
+test deleting...
+	Level shrinks from 24 to 20
+	Level shrinks from 20 to 19
+	Level shrinks from 19 to 18
+	Level shrinks from 18 to 16
+	Level shrinks from 16 to 14
+	Level shrinks from 14 to 13
+	Level shrinks from 13 to 12
+	Level shrinks from 12 to 11
+	Level shrinks from 11 to 8
+	Level shrinks from 8 to 7
+	Level shrinks from 7 to 6
+	Level shrinks from 6 to 3
+	Level shrinks from 3 to 2
+	Level shrinks from 2 to 1
+	Level shrinks from 1 to 0
+	deleting 5000000 elements using 1.250s.
+
