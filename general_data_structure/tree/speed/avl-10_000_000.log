@@ -1,0 +1,9 @@
+test inserting...
+	inserting 10000000 elements using 23.812s.
+
+test searching...
+	searching 10000000 elements using 20.109s.
+
+test deleting...
+	deleting 10000000 elements using 26.688s.
+
